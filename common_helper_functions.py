@@ -44,6 +44,8 @@ def load_pre_trained_network_model(arch, hidden_units, output_units, learning_ra
                                    nn.Linear(hidden_units, output_units),
                                    nn.LogSoftmax(dim=1))
         model.classifier = classifier
+        for param in model.classifier.parameters():
+            param.requires_grad = True
         params_to_update = model.classifier.parameters()
 
     elif arch == "vgg":
@@ -64,24 +66,8 @@ def load_pre_trained_network_model(arch, hidden_units, output_units, learning_ra
                                    nn.Linear(hidden_units, output_units),
                                    nn.LogSoftmax(dim=1))
         model.classifier = classifier
-        params_to_update = model.classifier.parameters()
-
-        # TODO: Verify that squeezenet model can be trained. Remove comments.
-    elif arch == "squeezenet":
-        """ Squeezenet
-        """
-        model = models.squeezenet1_0(pretrained=True)
-        if is_training:
-            disable_grad_for_pretrained_network(model)
-        classifier = nn.Sequential(nn.Linear(model.classifier[1].in_channels, hidden_units),
-                                   nn.ReLU(),
-                                   nn.Dropout(0.2),
-                                   nn.Linear(hidden_units, output_units),
-                                   nn.LogSoftmax(dim=1))
-        model.classifier = classifier
-        # model.classifier[1] = nn.Conv2d(512, output_units, kernel_size=(1, 1), stride=(1, 1))
-        # model.num_classes = output_units
-        # params_to_update = model.classifier[1].parameters()
+        for param in model.classifier.parameters():
+            param.requires_grad = True
         params_to_update = model.classifier.parameters()
 
     elif arch == "densenet":
@@ -90,19 +76,19 @@ def load_pre_trained_network_model(arch, hidden_units, output_units, learning_ra
         model = models.densenet121(pretrained=True)
         if is_training:
             disable_grad_for_pretrained_network(model)
-        # classifier = nn.Sequential(nn.Linear(model.classifier.in_features, hidden_units),
-        #                            nn.ReLU(),
-        #                            nn.Dropout(0.2),
-        #                            nn.Linear(hidden_units, output_units),
-        #                            nn.LogSoftmax(dim=1))
-        # model.classifier = classifier
+        classifier = nn.Sequential(nn.Linear(model.classifier.in_features, hidden_units),
+                                   nn.ReLU(),
+                                   nn.Dropout(0.2),
+                                   nn.Linear(hidden_units, output_units),
+                                   nn.LogSoftmax(dim=1))
+        model.classifier = classifier
         params_to_update = model.classifier.parameters()
 
     else:
         print("Invalid model name, exiting...")
         exit()
 
-    print(f"Network architecture: \n{model}\n")
+    # print(f"Network architecture: \n{model}\n")
 
     # TODO: test with SGD optimiser
     # optim.SGD(params_to_update, lr=0.001, momentum=0.9)

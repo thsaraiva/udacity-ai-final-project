@@ -7,7 +7,7 @@ def parse_command_line_arguments():
     parser.add_argument('--save_dir', help="Specify in which directory to save the trained network model checkpoint",
                         default="./")
     parser.add_argument('--arch', help="Specify which neural network architecture to use",
-                        choices=["resnet", "alexnet", "vgg", "squeezenet", "densenet"],
+                        choices=["resnet", "alexnet", "vgg", "densenet"],
                         default="densenet")
     parser.add_argument('--learning_rate',
                         help="Specify the learning rate used on the network training",

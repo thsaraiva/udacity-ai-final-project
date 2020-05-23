@@ -91,12 +91,12 @@ def train(training_data_loader, model, optimizer, criterion, device):
         _, top_class = torch.exp(output).topk(1, dim=1)
         correct_predictions = torch.sum((top_class == labels.view(*top_class.shape)).type(torch.FloatTensor)).item()
         partial_correct_predictions += correct_predictions
-        print(
-            f"Training result: {correct_predictions} correct predictions out of {batch_size} images. Partial correct predictions: {partial_correct_predictions}")
+        # print(
+        #     f"Training result: {correct_predictions} correct predictions out of {batch_size} images. Partial correct predictions: {partial_correct_predictions}")
 
     training_loss = training_loss / dataset_length
-    training_accuracy = partial_correct_predictions / dataset_length
-    print(f'Training: Loss: {training_loss:.4f},  Accuracy: {training_accuracy:.4f}, Dataset size: {dataset_length}')
+    training_accuracy = (partial_correct_predictions / dataset_length) * 100
+    print(f'Training ended. Loss:     {training_loss:.4f}, Accuracy:    {training_accuracy:.2f}%')
 
 
 def validate(validation_data_loader, model, criterion, device, best_acc, best_model_weights, model_checkpoint):
@@ -121,20 +121,19 @@ def validate(validation_data_loader, model, criterion, device, best_acc, best_mo
         _, top_class = torch.exp(output).topk(1, dim=1)
         correct_predictions = torch.sum((top_class == labels.view(*top_class.shape)).type(torch.FloatTensor)).item()
         partial_correct_predictions += correct_predictions
-        print(
-            f"Validation result: {correct_predictions} correct predictions out of {batch_size} images. Partial correct predictions: {partial_correct_predictions}")
+        # print(
+        #     f"Validation result: {correct_predictions} correct predictions out of {batch_size} images. Partial correct predictions: {partial_correct_predictions}")
 
     validation_loss = validation_loss / dataset_length
-    validation_accuracy = partial_correct_predictions / dataset_length
-    print(
-        f'Validation: Loss: {validation_loss:.4f} Accuracy: {validation_accuracy:.4f}, Dataset size: {dataset_length}')
+    validation_accuracy = (partial_correct_predictions / dataset_length) * 100
+    print(f'Validation ended. Loss:     {validation_loss:.4f}, Accuracy:    {validation_accuracy:.2f}%')
 
     if validation_accuracy > best_acc:
         best_acc = validation_accuracy
         model_checkpoint["best_acc"] = best_acc
         best_model_weights = copy.deepcopy(model.state_dict())
         save_checkpoint(model, model_checkpoint, is_partial=True)
-        print(f'New best accuracy: {(best_acc * 100):.2f}%')
+        print(f'New best accuracy: {(best_acc):.2f}%.')
 
     return best_acc, best_model_weights
 
