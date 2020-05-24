@@ -7,11 +7,8 @@ import torch
 
 
 def get_data_loaders(data_dir, batch_size):
-    print("PyTorch Version: ", torch.__version__)
     train_dir = data_dir + 'train'
     valid_dir = data_dir + 'valid'
-    # print(f"Training with data from: {train_dir}")
-    # print(f"Validating with data from: {valid_dir}")
 
     # Define transforms for the training data
     train_transforms = transforms.Compose([transforms.RandomRotation(30),
@@ -91,8 +88,6 @@ def train(training_data_loader, model, optimizer, criterion, device):
         _, top_class = torch.exp(output).topk(1, dim=1)
         correct_predictions = torch.sum((top_class == labels.view(*top_class.shape)).type(torch.FloatTensor)).item()
         partial_correct_predictions += correct_predictions
-        # print(
-        #     f"Training result: {correct_predictions} correct predictions out of {batch_size} images. Partial correct predictions: {partial_correct_predictions}")
 
     training_loss = training_loss / dataset_length
     training_accuracy = (partial_correct_predictions / dataset_length) * 100
@@ -121,8 +116,6 @@ def validate(validation_data_loader, model, criterion, device, best_acc, best_mo
         _, top_class = torch.exp(output).topk(1, dim=1)
         correct_predictions = torch.sum((top_class == labels.view(*top_class.shape)).type(torch.FloatTensor)).item()
         partial_correct_predictions += correct_predictions
-        # print(
-        #     f"Validation result: {correct_predictions} correct predictions out of {batch_size} images. Partial correct predictions: {partial_correct_predictions}")
 
     validation_loss = validation_loss / dataset_length
     validation_accuracy = (partial_correct_predictions / dataset_length) * 100
@@ -132,8 +125,8 @@ def validate(validation_data_loader, model, criterion, device, best_acc, best_mo
         best_acc = validation_accuracy
         model_checkpoint["best_acc"] = best_acc
         best_model_weights = copy.deepcopy(model.state_dict())
-        save_checkpoint(model, model_checkpoint, is_partial=True)
-        print(f'New best accuracy: {(best_acc):.2f}%.')
+        # save_checkpoint(model, model_checkpoint, is_partial=True)
+        # print(f'New best accuracy: {(best_acc):.2f}%.')
 
     return best_acc, best_model_weights
 

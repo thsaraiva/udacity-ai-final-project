@@ -5,7 +5,6 @@ import torch
 
 def get_device_type(use_gpu):
     will_use_gpu = torch.cuda.is_available() and use_gpu
-    # print(f"Will use GPU: {will_use_gpu}")
     return torch.device("cuda" if will_use_gpu else "cpu")
 
 
@@ -88,14 +87,7 @@ def load_pre_trained_network_model(arch, hidden_units, output_units, learning_ra
         print("Invalid model name, exiting...")
         exit()
 
-    # print(f"Network architecture: \n{model}\n")
-
-    # TODO: test with SGD optimiser
-    # optim.SGD(params_to_update, lr=0.001, momentum=0.9)
     optimizer = optim.Adam(params_to_update, lr=learning_rate)
-
-    # TODO: test with CrossEntropy loss function
-    # nn.CrossEntropyLoss()
     criterion = nn.NLLLoss()
 
     if not is_training:

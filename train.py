@@ -24,7 +24,7 @@ model, optimizer, criterion = load_pre_trained_network_model(model_checkpoint["a
                                                              model_checkpoint["output_units"],
                                                              model_checkpoint["learning_rate"])
 
-model.to(device)
+model = model.to(device)
 
 # train model
 model = train_model(model, optimizer, criterion, arguments.epochs, training_data_loader, validation_data_loader, device,

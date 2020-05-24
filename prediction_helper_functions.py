@@ -43,11 +43,8 @@ def process_image(image_file_name, crop_width, crop_height):
         returns an Numpy array
     '''
     with Image.open(image_file_name) as image:
-        # print(f"Original Image format: {image.format}, size: {image.size}, mode: {image.mode}")
         resized_image = resize_keep_ratio(image, 256)
-        # print(f"Resized Image format: {resized_image.format}, size: {resized_image.size}, mode: {resized_image.mode}")
         cropped_image = center_crop(resized_image, crop_width, crop_height)
-        # print(f"Cropped Image format: {cropped_image.format}, size: {cropped_image.size}, mode: {cropped_image.mode}")
         processed_image_nparray = transform_colour_channels(cropped_image,
                                                             np.array([0.485, 0.456, 0.406]),
                                                             np.array([0.229, 0.224, 0.225]))
@@ -62,7 +59,7 @@ def predict_flower(model, image_tensor):
 
 def process_results(results, topk, categories_to_index_dic, category_names_file):
     probabilities, indexes = results.topk(topk, dim=1)
-    probabilities, indexes = probabilities.flatten() * 100, indexes.flatten()
+    probabilities, indexes = probabilities.reshape(-1) * 100, indexes.reshape(-1)
     categories = get_categories_from_indexes(categories_to_index_dic, indexes)
     if category_names_file is None:
         names = [" - " for _ in categories]

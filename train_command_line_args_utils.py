@@ -25,6 +25,4 @@ def parse_command_line_arguments():
                         default=5)
     parser.add_argument('--use_gpu', help="Specify if Cuda GPU should be used for calculations IF AVAILABLE",
                         action="store_true", default=True)
-    parser.add_argument('-v', '--verbose', help="Enable debug logs",
-                        action="store_true", default=False)
     return parser.parse_args()

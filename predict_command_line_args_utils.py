@@ -12,6 +12,4 @@ def parse_command_line_arguments():
     parser.add_argument('--category_names', help="JSON file to be used as mapping of categories to real names.")
     parser.add_argument('--use_gpu', help="Specify if Cuda GPU should be used for inference IF AVAILABLE",
                         action="store_true", default=True)
-    parser.add_argument('-v', '--verbose', help="Enable debug logs",
-                        action="store_true", default=False)
     return parser.parse_args()

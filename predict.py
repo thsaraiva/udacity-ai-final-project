@@ -7,12 +7,12 @@ from prediction_helper_functions import process_image, process_results, predict_
 arguments = parse_command_line_arguments()
 
 device = get_device_type(arguments.use_gpu)
+print(device)
 
 image_tensor = process_image(arguments.flower_image_file, 224, 224)
 image_tensor.to(device)
 
 model_checkpoint = torch.load(arguments.checkpoint_file, map_location=device)
-# print(f"best_acc: {model_checkpoint['best_acc']}")
 
 model, _, _ = load_pre_trained_network_model(model_checkpoint["arch"],
                                              model_checkpoint["hidden_units"],
